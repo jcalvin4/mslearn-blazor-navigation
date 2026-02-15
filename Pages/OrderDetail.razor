@@ -2,22 +2,6 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<div class="top-bar">
-    <a class="logo" href="">
-        <img src="img/logo.svg" />
-    </a>
-
-    <NavLink href="" class="nav-tab" Match="NavLinkMatch.All">
-        <img src="img/pizza-slice.svg" />
-        <div>Get Pizza</div>
-    </NavLink>
-
-    <NavLink href="myorders" class="nav-tab">
-        <img src="img/bike.svg" />
-        <div>My Orders</div>
-    </NavLink>
-
-</div>
 
 <div class="main">
     @if (invalidOrder)
@@ -57,7 +41,7 @@
                           <strong>
                               @(pizza.Size)"
                               @pizza.Special.Name
-                              (£@pizza.GetFormattedTotalPrice())
+                              (@Currency@pizza.GetFormattedTotalPrice())
                           </strong>
                       </p>
                   }
@@ -69,7 +53,7 @@
 
 @code {
     [Parameter] public int OrderId { get; set; }
-
+     [CascadingParameter] public string Currency { get; set; }
     OrderWithStatus orderWithStatus;
     bool invalidOrder = false;
     protected override async Task OnParametersSetAsync()

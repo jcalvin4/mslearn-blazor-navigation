@@ -6,21 +6,7 @@
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
 
-<div class="top-bar">
-    <a class="logo" href="">
-        <img src="img/logo.svg" />
-    </a>
 
-    <NavLink href="" class="nav-tab" Match="NavLinkMatch.All">
-        <img src="img/pizza-slice.svg" />
-        <div>Get Pizza</div>
-    </NavLink>
-
-    <NavLink href="myorders" class="nav-tab">
-        <img src="img/bike.svg" />
-        <div>My Orders</div>
-    </NavLink>
-</div>
 
 <div class="main">
     <div class="checkout-cols">
@@ -32,7 +18,7 @@
                     <strong>
                         @(pizza.Size)
                         @pizza.Special.Name
-                        (£@pizza.GetFormattedTotalPrice())
+                        (@Currency@pizza.GetFormattedTotalPrice())
                     </strong> 
             
                 </p>
@@ -41,7 +27,7 @@
             <p>
                 <strong>
                     Total price:
-                    £@Order.GetFormattedTotalPrice()
+                    @Currency@Order.GetFormattedTotalPrice()
                 </strong>
             </p>
         </div>
@@ -54,6 +40,7 @@
 </div>
 
 @code {
+    [CascadingParameter] public string Currency { get; set; }
     Order Order => OrderState.Order;
     bool isSubmitting;
 
@@ -63,6 +50,6 @@
         var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "orders", OrderState.Order);
         var newOrderId = await response.Content.ReadFromJsonAsync<int>();
         OrderState.ResetOrder();
-        NavigationManager.NavigateTo("/myorders/{newOrderId}");
+        NavigationManager.NavigateTo($"/myorders/{newOrderId}");
     }
 }
